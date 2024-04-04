@@ -4,6 +4,8 @@ require('express-async-errors');
 const express = require('express');
 const app = express();
 
+const fileUpload=require('express-fileupload')
+
 // database
 const connectDB = require('./db/connect');
 
@@ -14,7 +16,8 @@ const productRouter=require('./routes/productRoutes')
 // error handler
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
-
+app.use(fileUpload())
+app.use(express.static('./public'))
 app.use(express.json())
 app.get('/', (req, res) => {
   res.send('<h1>File Upload Starter</h1>');
