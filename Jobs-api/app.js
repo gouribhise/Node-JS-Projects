@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 9000;
 
 const start = async () => {
   try {
