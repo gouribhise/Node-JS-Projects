@@ -1,8 +1,16 @@
-const express=require("express")
-const jobsRouter=express.Router()
-const {getAllJobs,getJob,createJob,updateJob,deleteJob}=require('../controllers/jobs')
+const express = require('express')
 
- jobsRouter.route('/').post(createJob).get(getAllJobs)
- jobsRouter.route('/:id').get(getJob).delete(deleteJob).patch(updateJob)
+const router = express.Router()
+const {
+  createJob,
+  deleteJob,
+  getAllJobs,
+  updateJob,
+  getJob,
+} = require('../controllers/jobs')
 
-module.exports=jobsRouter
+router.route('/').post(createJob).get(getAllJobs)
+
+router.route('/:id').get(getJob).delete(deleteJob).patch(updateJob)
+
+module.exports = router
