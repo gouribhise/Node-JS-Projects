@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
+const Token=require('../models/Token')
 const { attachCookiesToResponse, createTokenUser,sendVerificationEmail } = require('../utils');
 const crypto=require('crypto')
  
@@ -20,7 +21,9 @@ const register = async (req, res) => {
   //const user = await User.create({ name, email, password, role,verificationToken });
   const origin="http://localhost:3000"
   
-  await sendVerificationEmail({name:user.name,email:user.email,verificationToken:user.verificationToken})
+  await sendVerificationEmail({name:user.name,email:user.email,verificationToken:user.verificationToken,
+  origin}
+    )
   res.status(StatusCodes.CREATED).json({msg:'Success! Please check your email to verify account'})
  
 };
@@ -62,7 +65,13 @@ const login = async (req, res) => {
 
   }
   const tokenUser = createTokenUser(user);
-  attachCookiesToResponse({ res, user: tokenUser });
+  let refreshToken=''
+  refreshToken=crypto.randomBytes(40).toString('hex')
+  const userAgent=req.headers['user-agent']
+  const ip=req.ip
+  const userToken={refreshToken,ip,userAgent,user:user._id}
+ await Token.create(userToken)
+  attachCookiesToResponse({ res, user: tokenUser,refreshToken });
 
   res.status(StatusCodes.OK).json({ user: tokenUser });
 };
