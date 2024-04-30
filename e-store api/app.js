@@ -6,11 +6,15 @@ const app=express()
 const connectDB=require('./db/connect')
 const notFoundMiddleware=require('./middleware/not-found')
 const errorHandlerMiddleware=require('./middleware/error-handler')
+//routers
+const authRouter=require('./routes/authRoutes')
 //middleware
+app.use(morgan('tiny'))
 app.use(express.json())
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)
 
+app.use('/api/v1/auth',authRouter)
 
 app.get('/',(req,res)=>{
     res.send('e commerce api')
