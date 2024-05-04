@@ -19,7 +19,7 @@ const connectDB = require('./db/connect');
 
 //  routers
 const authRouter = require('./routes/authRoutes');
- 
+const userRouter=require('./routes/userRoutes')
 
 // middleware
 const notFoundMiddleware = require('./middleware/not-found');
@@ -40,7 +40,8 @@ app.use(express.json());
 app.use(express.static('./public'));
 app.use(fileUpload());
 
-app.use('/api/v1/auth/', authRouter);
+app.use('/api/v1/auth', authRouter);
+app.user('/api/v1/users',userRouter)
  
 
 app.use(notFoundMiddleware);
