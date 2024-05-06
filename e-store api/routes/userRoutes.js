@@ -9,7 +9,7 @@ const{ getAllUsers,
 
 router.route('/').get(authenticateUser,authorizePermissions,getAllUsers);
 router.route('/updateUser').post(updateUser)
-router.route('/updatePassword').post(updateUserPassword)
+router.route('/updatePassword').post(authenticateUser,updateUserPassword)
 router.route('/:id').get(authenticateUser,getSingleUser)
 
 module.exports=router
