@@ -2,7 +2,7 @@ const User = require('../models/User');
 const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
 const jwt=require('jsonwebtoken')
-const {createJWT}=require('../utils')
+const {createJWT,createTokenUser}=require('../utils')
 const register = async (req, res) => {
   const { email, name, password } = req.body;
 

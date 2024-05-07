@@ -1,6 +1,7 @@
 const User=require('../models/User')
 const {StatusCodes}=require('http-status-codes')
 const CustomError =require('../errors')
+const {createTokenUser,attachCookiesToResponse, checkPermissions}=require('../utils')
 const getAllUsers=async(req,res)=>{
     const users=await User.find({role:'user'}).select('-password')
     res.status(StatusCodes.OK).json({users})
@@ -12,6 +13,7 @@ const getSingleUser=async(req,res)=>{
      if(!user){
      throw new CustomError.NotFoundError(`No user with id ${req.params.id}`)
      }
+     checkPermissions(req.user,user._id)
      res.status(StatusCodes.OK).json({user})
 }
 
@@ -19,8 +21,13 @@ const showCurrentUser=(req,res)=>{
      res.status(StatusCodes.OK).json({user:req.user})
 }
 
-const updateUser=(req,res)=>{
-    res.send('update user')
+const updateUser=async(req,res)=>{
+    const{email,name}=req.body
+    if(!email||!name){
+        throw new CustomError.BadRequestError('Please provide all values')
+    }
+    const user=await User.findOneAndUpdate({_id:req.user.useId},{email,name},{new:true,runValidators:true})
+    const tokenUser=createTokenUser(user)
 }
 
 const updateUserPassword=async(req,res)=>{
@@ -38,6 +45,15 @@ const updateUserPassword=async(req,res)=>{
    res.status(StatusCodes.OK).json({msg:'Success! Password updated!'})
 }
 
+UserSchema.pre('save',async function(){
+    const salt=await bcrypt.genSalt(10)
+    this.password=await bcrypt.hash(this.password,salt)
+})
+
+UserSchema.methods.comparePassword=async function(candidatePassword){
+    const isMatch=await bcrypt.compare(candidatePassword,this.password);
+    return isMatch
+}
 module.exports={
     getAllUsers,
     getSingleUser,
