@@ -7,6 +7,7 @@ const app = express();
 // rest of the packages
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
+const fileUpload=require('express-fileupload')
 const fileUpload = require('express-fileupload');
 const rateLimiter = require('express-rate-limit');
 const helmet = require('helmet');
@@ -26,6 +27,8 @@ const productRouter=require('./routes/productRoutes')
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 
+
+ 
 app.set('trust proxy', 1);
 app.use(
   rateLimiter({
