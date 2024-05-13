@@ -34,4 +34,17 @@ product:{
 },{timestamps:true})
 
 ReviewSchema.index({product:1,user:1},{unique:true})
+
+ReviewSchema.statics.claculateAverageRating=async function(productId){
+    console.log(productId)
+}
+
+ReviewSchema.post('save',async function(){
+    await this.constructor.claculateAverageRating(this.product)
+ })
+
+ReviewSchema.post('remove',async function(){
+
+    await this.constructor.claculateAverageRating(this.product)
+})
 module.exports=mongoose.model('Review',ReviewSchema)
