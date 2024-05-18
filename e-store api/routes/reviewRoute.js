@@ -1,11 +1,21 @@
-const express=require('express')
-const router=express.Router()
-const {authenticateUser}=require('../middleware/authentication')
-const {createReview,getAllReviews,getSingleReview,updateReview,deleteReview
-}=require('../controllers/ReviewController')
+const express = require('express');
+const router = express.Router();
+const { authenticateUser } = require('../middleware/authentication');
 
-router.route('/').post(authenticateUser,createReview).get(getAllReviews)
+const {
+  createReview,
+  getAllReviews,
+  getSingleReview,
+  updateReview,
+  deleteReview,
+} = require('../controllers/reviewController');
 
-router.route('/:id').get(getSingleReview).patch(authenticateUser,updateReview).delete(authenticateUser,deleteReview)
+router.route('/').post(authenticateUser, createReview).get(getAllReviews);
 
-module.exports=router
+router
+  .route('/:id')
+  .get(getSingleReview)
+  .patch(authenticateUser, updateReview)
+  .delete(authenticateUser, deleteReview);
+
+module.exports = router;
